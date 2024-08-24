@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/coder-ka/esbuild-ts-lib-starter#readme",
   "devDependencies": {
+    "@coder-ka/query": "^1.0.0",
     "@types/assert": "^1.5.10",
     "@types/node": "^22.2.0",
     "assert": "^2.1.0",

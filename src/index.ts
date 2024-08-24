@@ -16,7 +16,7 @@ export function main() {
         await fs.writeFile(
           outpuPath,
           `// ^-^v
-  import { column, table } from "../../src/main";
+  import { column, table } from "@coder-ka/query";
   
   export type ${prismaType("String")} = string;
   export type ${prismaType("Boolean")} = boolean;
