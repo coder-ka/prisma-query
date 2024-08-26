@@ -15,44 +15,36 @@ export function main() {
 
         await fs.writeFile(
           outpuPath,
-          `// ^-^v
-  import { column, table } from "@coder-ka/query";
-  
-  export type ${prismaType("String")} = string;
-  export type ${prismaType("Boolean")} = boolean;
-  export type ${prismaType("Int")} = number;
-  export type ${prismaType("BigInt")} = bigint;
-  export type ${prismaType("Float")} = number;
-  export type ${prismaType("Decimal")} = string;
-  export type ${prismaType("DateTime")} = Date;
-  export type ${prismaType("Json")} = string;
-  export type ${prismaType("Bytes")} = Buffer;
-  ${dmmf.datamodel.models
-    .map(
-      (model) => `
-  export type ${model.name} = {${model.fields
-        .filter((f) => f.kind === "scalar")
-        .map(
-          (f) => `
-    ${f.name}: ${prismaType(f.type)};`
-        )
-        .join("")}
-  };
-  export const ${model.name} = table(
-    "${model.name}",
-    ${strOrNull(model.dbName)},
-    {${model.fields
+          `import { column, table } from "@coder-ka/query";
+
+${dmmf.datamodel.models
+  .map(
+    (model) => `
+export type ${model.name} = {${model.fields
       .filter((f) => f.kind === "scalar")
       .map(
         (f) => `
-      ${f.name}: column<${prismaType(f.type)}>('${f.name}', ['${model.name}']),`
+  ${f.name}: ${convertPrismaTypeToTS(f.type)};`
       )
       .join("")}
-    },
-  );`
+};
+export const ${model.name} = table(
+  "${model.name}",
+  ${strOrNull(model.dbName)},
+  {${model.fields
+    .filter((f) => f.kind === "scalar")
+    .map(
+      (f) => `
+    ${f.name}: column<${convertPrismaTypeToTS(f.type)}>('${f.name}', ['${
+        model.name
+      }']),`
     )
-    .join("\n")}
-  `,
+    .join("")}
+  },
+);`
+  )
+  .join("\n")}
+`,
           "utf8"
         );
       } catch (e) {
@@ -64,11 +56,32 @@ export function main() {
     },
   });
 
-  function strOrNull(str: string | null): string {
-    return str === null ? "null" : `"${str}"`;
+  function convertPrismaTypeToTS(type: string) {
+    switch (type) {
+      case "String":
+        return "string";
+      case "Boolean":
+        return "boolean";
+      case "Int":
+        return "number";
+      case "BigInt":
+        return "bigint";
+      case "Float":
+        return "number";
+      case "Decimal":
+        return "string";
+      case "DateTime":
+        return "Date";
+      case "Json":
+        return "string";
+      case "Bytes":
+        return "Buffer";
+      default:
+        return type;
+    }
   }
 
-  function prismaType(type: string) {
-    return "Prisma" + type;
+  function strOrNull(str: string | null): string {
+    return str === null ? "null" : `"${str}"`;
   }
 }
