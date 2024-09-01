@@ -84,8 +84,4 @@ export const ${model.dbName || model.name} = table(
         return type;
     }
   }
-
-  function strOrNull(str: string | null): string {
-    return str === null ? "null" : `"${str}"`;
-  }
 }
