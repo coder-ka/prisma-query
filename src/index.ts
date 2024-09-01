@@ -34,14 +34,13 @@ export type ${model.name} = {${model.fields
       .join("")}
 };
 export const ${model.dbName || model.name} = table(
-  "${model.name}",
-  ${strOrNull(model.dbName)},
+  "${model.dbName || model.name}",
   {${model.fields
     .filter((f) => f.kind === "scalar")
     .map(
       (f) => `
     ${f.name}: column<${convertPrismaTypeToTS(f.type)}>('${f.name}', ['${
-        model.name
+        model.dbName || model.name
       }']),`
     )
     .join("")}

@@ -1,6 +1,6 @@
 {
   "name": "@coder-ka/prisma-query",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "bin": {
     "prisma-query": "./dist/bin.cjs"
