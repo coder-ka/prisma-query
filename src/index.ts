@@ -33,7 +33,7 @@ export type ${model.name} = {${model.fields
       )
       .join("")}
 };
-export const ${model.name} = table(
+export const ${model.dbName || model.name} = table(
   "${model.name}",
   ${strOrNull(model.dbName)},
   {${model.fields
