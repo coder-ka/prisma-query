@@ -10,13 +10,18 @@ export function main() {
           throw new Error("output path is required!");
         }
 
+        const mode = options.generator.config.mode as
+          | "query-module-test"
+          | undefined;
+
         const dmmf = options.dmmf;
         dmmf.datamodel.models;
 
         await fs.writeFile(
           outpuPath,
-          `import { column, table } from "@coder-ka/query";
-
+          `import { column, table } from "${
+            mode === "query-module-test" ? "../src/main" : "@coder-ka/query"
+          }";
 ${dmmf.datamodel.models
   .map(
     (model) => `
